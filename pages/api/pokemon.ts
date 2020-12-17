@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const ENDPOINT =
   "https://ihyp-ts-workshop-dummy-backend.ljosberinn.vercel.app/api";
