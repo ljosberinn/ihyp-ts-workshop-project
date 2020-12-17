@@ -1,5 +1,5 @@
-import { NextComponentType } from "next";
-import { NextRouter } from "next/dist/next-server/lib/router/router";
+import type { NextComponentType } from "next";
+import type { NextRouter } from "next/dist/next-server/lib/router/router";
 import "../src/styles/core.css";
 
 type AppProps = {
@@ -10,11 +10,6 @@ type AppProps = {
 };
 
 // eslint-disable-next-line import/no-default-export
-export default function App({
-  Component,
-  pageProps,
-}: //   router,
-//   error,
-AppProps): JSX.Element {
+export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return <Component {...pageProps} />;
 }

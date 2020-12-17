@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
-import { Button } from "../src/components/Button";
+import { Evolutions } from "../src/components/Evolutions";
 import { Image } from "../src/components/Image";
+import { Nav } from "../src/components/Nav";
 import { StatsTable } from "../src/components/StatsTable";
 import { Summary } from "../src/components/Summary";
 import { PokemonContextProvider } from "../src/context/Pokemon";
 import { usePokemon } from "../src/hooks/usePokemon";
+import { className } from "../src/utils/className";
 
 // eslint-disable-next-line import/no-default-export
 export default function Index(): JSX.Element {
@@ -17,17 +19,7 @@ export default function Index(): JSX.Element {
 }
 
 function Pokemon() {
-  const {
-    setCurrentPokemon,
-    pokemon,
-    firstId,
-    lastId,
-    findEvolution,
-    caughtPokemon,
-    seenPokemon,
-    toggleCaughtPokemon,
-    toggleSeen,
-  } = usePokemon();
+  const { pokemon, seenPokemon } = usePokemon();
 
   useEffect(() => {
     if (pokemon) {
@@ -36,35 +28,12 @@ function Pokemon() {
   }, [pokemon]);
 
   if (!pokemon) {
-    return null;
+    return <h1>still waiting for the API</h1>;
   }
 
   return (
     <div className="flex justify-center h-100 align-center">
-      <aside>
-        <nav>
-          <Button
-            disabled={pokemon.id === firstId}
-            onClick={() => {
-              setCurrentPokemon(firstId);
-            }}
-            className="mr-2"
-            aria-label="first"
-          >
-            {"<<"}
-          </Button>
-
-          <Button
-            disabled={pokemon.id === firstId}
-            onClick={() => {
-              setCurrentPokemon((prev) => prev - 1);
-            }}
-            aria-label="last"
-          >
-            {"<"}
-          </Button>
-        </nav>
-      </aside>
+      <Nav position="left" />
 
       <main className="w-25 p-4 h-50">
         <section>
@@ -73,16 +42,17 @@ function Pokemon() {
           </h1>
 
           <div className="flex justify-center">
-            <Image src={pokemon.img} alt={pokemon.name} />
+            <Image
+              src={pokemon.img}
+              alt={pokemon.name}
+              className={className(
+                "transition-25",
+                !seenPokemon.includes(pokemon.id) && "grayscale opacity-25"
+              )}
+            />
           </div>
 
-          <StatsTable
-            {...pokemon}
-            caught={caughtPokemon.has(pokemon.id)}
-            seen={seenPokemon.has(pokemon.id)}
-            toggleCaughtPokemon={toggleCaughtPokemon}
-            toggleSeen={toggleSeen}
-          />
+          <StatsTable />
 
           <div className="mt-4">
             <Summary category="Types" color="green">
@@ -94,53 +64,11 @@ function Pokemon() {
             </Summary>
           </div>
 
-          {pokemon.next_evolution ? (
-            <div>
-              <h2 className="text-center my-2">evolutions</h2>
-              <div className="flex justify-center space-evenly">
-                {pokemon.next_evolution.map((evolution) => {
-                  const { img, name } = findEvolution(evolution.num);
-
-                  return (
-                    <div className="text-center" key={evolution.num}>
-                      <Image src={img} alt={name} height="80px" width="80px" />
-                      <br />
-                      {evolution.num} - {evolution.name}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
-            <h2 className="text-center my-2">no evolutions</h2>
-          )}
+          <Evolutions />
         </section>
       </main>
 
-      <aside>
-        <nav>
-          <Button
-            disabled={pokemon.id === lastId}
-            onClick={() => {
-              setCurrentPokemon((prev) => prev + 1);
-            }}
-            className="mr-2"
-            aria-label="next"
-          >
-            {">"}
-          </Button>
-
-          <Button
-            disabled={pokemon.id === lastId}
-            onClick={() => {
-              setCurrentPokemon(lastId);
-            }}
-            aria-label="last"
-          >
-            {">>"}
-          </Button>
-        </nav>
-      </aside>
+      <Nav position="right" />
     </div>
   );
 }

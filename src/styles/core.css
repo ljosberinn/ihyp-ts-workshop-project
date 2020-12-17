@@ -106,3 +106,21 @@ table {
 .transition-25 {
   transition: 0.25s ease-in-out;
 }
+
+.appearance-none {
+  appearance: none;
+}
+
+button.appearance-none {
+  background-color: unset;
+  border: none;
+  cursor: pointer;
+}
+
+.opacity-25 {
+  opacity: 0.25;
+}
+
+details summary {
+  cursor: pointer;
+}
